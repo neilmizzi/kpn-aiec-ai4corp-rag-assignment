@@ -1,0 +1,47 @@
+[project]
+name = "langchain-rag"
+version = "0.1.0"
+description = "RAG assistant answering LangChain questions over the FreshStack Oct-2024 corpus, with citations."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=2.20",
+    "numpy>=1.26",
+    "openai>=1.107",
+    "python-dotenv>=1.0",
+    "rank-bm25>=0.2.2",
+    "truststore>=0.10.5",
+]
+
+[project.scripts]
+rag = "rag.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "pre-commit>=3.6.2,<4"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rag"]
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.docformatter]
+wrap-summaries = 100
+wrap-descriptions = 100
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D100, D104"
+match = '(?!.*(test_|conftest)).*\.py'
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]
