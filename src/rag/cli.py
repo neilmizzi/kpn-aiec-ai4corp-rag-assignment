@@ -30,6 +30,8 @@ def repl() -> None:
     from rag.generate import answer
     from rag.retrieve import retrieve
 
+    print("Loading index...")
+    retrieve("warm up", 1)
     print("Ask a LangChain question (empty line or Ctrl+C to quit).")
     while True:
         try:
@@ -38,4 +40,11 @@ def repl() -> None:
             break
         if not question:
             break
-        print(answer(question, retrieve(question, TOP_K)))
+        chunks = retrieve(question, TOP_K)
+        result = answer(question, chunks)
+        print(f"\n{result['answer']}")
+        urls = {c["id"]: c["url"] for c in chunks}
+        if result["citations"]:
+            print("\nSources:")
+            for doc_id in result["citations"]:
+                print(f"  [{doc_id}] {urls[doc_id]}")

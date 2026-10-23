@@ -22,6 +22,9 @@ Short log of key decisions (why, and what we gave up) and progress. Newest last.
 | 14 | 2026-10-23 | `bm25s` instead of `rank-bm25`; English stopwords, no stemming | Sparse matrices: builds in 16 s, fast queries, saves to disk | Default tokenizer keeps `snake_case`/`CamelCase` identifiers whole (good for exact API names, misses sub-word matches) |
 | 15 | 2026-10-23 | RRF fusion (k=60) of top-100 from each ranker; exact dense search with NumPy (no vector DB) | RRF needs no score calibration; 49.5k x 384 floats = 76 MB, brute force is milliseconds | No ANN; would not scale to millions of chunks |
 | 16 | 2026-10-23 | Embeddings built in 2,000-chunk shards that resume on restart | 45-min CPU job should survive interruption | A few extra lines |
+| 17 | 2026-10-23 | Prompt: answer only from numbered sources, cite `[doc_id]` inline, fixed abstention sentence; chunks capped at 4,000 chars, top 8 | Citations map 1:1 to corpus IDs; cap keeps prompt ~8k tokens | Long chunks lose their tail |
+| 18 | 2026-10-23 | Cited IDs are validated against the retrieved set; invented IDs are dropped | Prevents hallucinated citations reaching the user | A real but mistyped ID is lost |
+| 19 | 2026-10-23 | Abstain only when sources are unrelated; for debugging questions, explain what the sources indicate. Abstention detected by regex on the first line + no citations | First prompt over-abstained on a dev question with 4 relevant chunks retrieved; the model also paraphrased the fixed sentence | More partial answers; risk of answering from loosely related sources when retrieval misses |
 
 ## Timeline
 
@@ -37,3 +40,5 @@ Short log of key decisions (why, and what we gave up) and progress. Newest last.
 | 2026-10-23 | 11:50 | Benchmarked `bge-small` on CPU: 500 chunks in 27 s, ~45 min for the full corpus |
 | 2026-10-23 | 13:48 | BM25 index built (16 s). Dev baseline, BM25 only: recall@10 0.171, recall@100 0.371, any-hit@10 67% |
 | 2026-10-23 | 13:48 | Full embedding build started |
+| 2026-10-23 | 14:03 | Laptop entered standby; embedding paused until 14:48 (shards resumed fine) |
+| 2026-10-23 | 15:01 | Answer generation with citations + abstention working (tried on 5 dev questions with BM25) |
