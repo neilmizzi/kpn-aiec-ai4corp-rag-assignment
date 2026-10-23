@@ -9,7 +9,8 @@ def main() -> None:
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("index", help="Download the corpus and build the search index")
     sub.add_parser("ask", help="Start an interactive Q&A session")
-    sub.add_parser("eval", help="Run the evaluation on the held-out test split")
+    evaluation = sub.add_parser("eval", help="Compare retrieval modes against relevance judgments")
+    evaluation.add_argument("--split", choices=("dev", "test"), default="dev")
     args = parser.parse_args()
 
     if args.command == "index":
@@ -21,7 +22,7 @@ def main() -> None:
     elif args.command == "eval":
         from rag.evaluate import main as run_eval
 
-        run_eval()
+        run_eval(split=args.split)
 
 
 def repl() -> None:

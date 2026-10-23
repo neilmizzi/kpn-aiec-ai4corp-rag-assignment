@@ -25,6 +25,7 @@ Short log of key decisions (why, and what we gave up) and progress. Newest last.
 | 17 | 2026-10-23 | Prompt: answer only from numbered sources, cite `[doc_id]` inline, fixed abstention sentence; chunks capped at 4,000 chars, top 8 | Citations map 1:1 to corpus IDs; cap keeps prompt ~8k tokens | Long chunks lose their tail |
 | 18 | 2026-10-23 | Cited IDs are validated against the retrieved set; invented IDs are dropped | Prevents hallucinated citations reaching the user | A real but mistyped ID is lost |
 | 19 | 2026-10-23 | Abstain only when sources are unrelated; for debugging questions, explain what the sources indicate. Abstention detected by regex on the first line + no citations | First prompt over-abstained on a dev question with 4 relevant chunks retrieved; the model also paraphrased the fixed sentence | More partial answers; risk of answering from loosely related sources when retrieval misses |
+| 20 | 2026-10-23 | Keep hybrid as the current baseline after comparing all three modes on 61 dev questions | Hybrid leads in recall@8 (0.170), hit@8 (0.705) and nDCG@8 (0.255); see README for all results | Still no relevant chunk in the top 8 for about 30% of questions; comparison is not proof of optimality |
 
 ## Timeline
 
@@ -42,3 +43,6 @@ Short log of key decisions (why, and what we gave up) and progress. Newest last.
 | 2026-10-23 | 13:48 | Full embedding build started |
 | 2026-10-23 | 14:03 | Laptop entered standby; embedding paused until 14:48 (shards resumed fine) |
 | 2026-10-23 | 15:01 | Answer generation with citations + abstention working (tried on 5 dev questions with BM25) |
+| 2026-10-23 | 15:16 | Full embedding index finished, including the standby interruption |
+| 2026-10-23 | 15:28 | User verified the hybrid CLI end to end; Python answer cited a JS document, motivating citation-support evaluation |
+| 2026-10-23 | After 15:32 | Compared BM25, dense and hybrid on all 61 dev questions; no test questions evaluated and no LLM calls made |
