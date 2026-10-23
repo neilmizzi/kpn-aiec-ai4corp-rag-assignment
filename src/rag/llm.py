@@ -25,23 +25,41 @@ _token = {"value": "", "expires_on": 0}
 
 
 def _gateway_token() -> str:
-    """Return an EntraID token from the Azure CLI, refreshed 5 minutes before expiry."""
+    """Get an EntraID token for the gateway from the Azure CLI, cached until 5 min before expiry.
+
+    Returns:
+        A bearer access token.
+
+    Raises:
+        RuntimeError: If the Azure CLI cannot provide a token, e.g. when not logged in.
+    """
     if time.time() > _token["expires_on"] - 300:
         az = shutil.which("az") or "az"
-        out = subprocess.run(
+        result = subprocess.run(
             [az, "account", "get-access-token", "--scope", GATEWAY_SCOPE, "-o", "json"],
             capture_output=True,
             text=True,
-            check=True,
-        ).stdout
-        data = json.loads(out)
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"Azure CLI token request failed; run `az login --allow-no-subscriptions`.\n"
+                f"{result.stderr.strip()}"
+            )
+        data = json.loads(result.stdout)
         _token.update(value=data["accessToken"], expires_on=int(data["expires_on"]))
     return _token["value"]
 
 
 @lru_cache(maxsize=1)
 def get_client() -> OpenAI:
-    """Build the OpenAI client for the configured provider."""
+    """Build the OpenAI client for the configured provider.
+
+    Returns:
+        A client pointed at the KPN GenAI Gateway or the public OpenAI API.
+
+    Raises:
+        ValueError: If ``LLM_PROVIDER`` is not ``kpn_gateway`` or ``openai``.
+    """
     if LLM_PROVIDER == "openai":
         return OpenAI()
     if LLM_PROVIDER != "kpn_gateway":
@@ -54,11 +72,14 @@ def get_client() -> OpenAI:
 
 
 def chat(messages: list[dict], model: str | None = None) -> str:
-    """Return the assistant message content for a chat completion.
+    """Run a chat completion.
 
     Args:
         messages: OpenAI-style chat messages.
         model: Model/deployment name; defaults to ``LLM_MODEL``.
+
+    Returns:
+        The assistant message content.
     """
     response = get_client().chat.completions.create(model=model or LLM_MODEL, messages=messages)
     return response.choices[0].message.content
@@ -69,6 +90,9 @@ def embed(texts: list[str]) -> list[list[float]]:
 
     Args:
         texts: Texts to embed.
+
+    Returns:
+        One embedding vector per input text, in input order.
     """
     response = get_client().embeddings.create(model=EMBEDDING_MODEL, input=texts)
     return [item.embedding for item in response.data]

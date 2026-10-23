@@ -5,6 +5,10 @@ citation support by checking whether the cited chunks back the answer's claims.
 """
 
 
-def main():
-    """Run the evaluation on the held-out test split."""
+def main() -> None:
+    """Run the evaluation on the held-out test split.
+
+    Raises:
+        NotImplementedError: Not implemented yet.
+    """
     raise NotImplementedError

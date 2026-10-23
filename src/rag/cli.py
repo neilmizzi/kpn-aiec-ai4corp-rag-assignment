@@ -3,8 +3,8 @@
 import argparse
 
 
-def main():
-    """Parse arguments and dispatch to the index, ask or eval command."""
+def main() -> None:
+    """Parse command-line arguments and dispatch to the index, ask or eval command."""
     parser = argparse.ArgumentParser(prog="rag", description="Ask LangChain questions.")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("index", help="Download the corpus and build the search index")
@@ -24,8 +24,8 @@ def main():
         run_eval()
 
 
-def repl():
-    """Run the interactive question-answer loop."""
+def repl() -> None:
+    """Run the interactive question-answer loop until an empty line, EOF or Ctrl+C."""
     from rag.config import TOP_K
     from rag.generate import answer
     from rag.retrieve import retrieve

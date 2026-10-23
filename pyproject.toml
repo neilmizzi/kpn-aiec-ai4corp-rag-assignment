@@ -42,6 +42,12 @@ convention = "google"
 add-ignore = "D100, D104"
 match = '(?!.*(test_|conftest)).*\.py'
 
+[tool.pydoclint]
+style = "google"
+skip-checking-short-docstrings = false
+arg-type-hints-in-docstring = false
+check-return-types = false
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--import-mode=importlib"]
