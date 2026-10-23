@@ -2,6 +2,34 @@
 
 Short log of key decisions (why, and what we gave up) and progress. Newest last.
 
+## Observed failures
+
+### F01: Python PDF example cites a TypeScript-only chunk
+
+- **Observed:** 2026-10-23, during a manual CLI demo (not a dev/test evaluation question).
+- **Question:** "How do I load a PDF in LangChain using Python?"
+- **Answer excerpt:** Python code importing `PyPDFLoader` from
+  `langchain_community.document_loaders`, constructing it with a PDF path, and calling `load()`.
+- **Citation attached to that example:**
+  `langchainjs/docs/core_docs/docs/how_to/document_loader_pdf.mdx_0_2919`.
+- **Verification:** Read the exact chunk from the downloaded FreshStack corpus on 2026-10-23
+  at 16:17. It documents TypeScript `PDFLoader` and `WebPDFLoader`, with no Python or
+  `PyPDFLoader` example.
+- **Finding:** Confirmed citation-support error. The cited ID exists and was retrieved, but
+  that chunk does not support the Python code attributed to it. This does not establish
+  whether the Python code itself is incorrect.
+- **Follow-up verification (16:41):** The user printed
+  `langchain/docs/docs/how_to/document_loader_pdf.ipynb_0_7516` from the corpus. It shows the
+  exact `PyPDFLoader` import, construction with `file_path`, and explicitly describes one
+  document per page. Its example uses `alazy_load()`, not `load()`. This supports the loader
+  choice and page behavior, but does not directly demonstrate the answer's synchronous
+  `loader.load()` call.
+- **Status:** Logged, not fixed. The Python guide provides partial support; the TypeScript
+  citation attached to the code example remains incorrect. Other cited chunks have not
+  yet been checked.
+- **Lesson:** Checking citation IDs against retrieved IDs is not evidence that the cited
+  text supports the answer's claim. Citation-support evaluation must inspect the content.
+
 ## Decisions
 
 | # | Date | Decision | Why | Trade-off |
@@ -46,3 +74,5 @@ Short log of key decisions (why, and what we gave up) and progress. Newest last.
 | 2026-10-23 | 15:16 | Full embedding index finished, including the standby interruption |
 | 2026-10-23 | 15:28 | User verified the hybrid CLI end to end; Python answer cited a JS document, motivating citation-support evaluation |
 | 2026-10-23 | After 15:32 | Compared BM25, dense and hybrid on all 61 dev questions; no test questions evaluated and no LLM calls made |
+| 2026-10-23 | 16:18 | Logged F01: verified that a TypeScript-only chunk was incorrectly cited for a Python PDF-loading example |
+| 2026-10-23 | 16:41 | F01 follow-up: manually checked the Python guide; import, construction and page behavior supported, but its example uses `alazy_load()` rather than `load()` |
