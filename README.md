@@ -21,7 +21,7 @@ Create a `.env` file in the repo root (never commit it) to override any default:
 |----------|---------|---------|
 | `LLM_PROVIDER` | `kpn_gateway` | `kpn_gateway` (az login, no key) or `openai` (needs `OPENAI_API_KEY`) |
 | `OPENAI_API_KEY` | — | Only for `LLM_PROVIDER=openai` |
-| `EMBEDDING_MODEL` | `text-embedding-3-large-1` | Embedding model / deployment |
+| `EMBEDDING_MODEL` | `BAAI/bge-small-en-v1.5` | Local sentence-transformers embedding model |
 | `LLM_MODEL` | `gpt-54-mini-2026-03-17` | Answer generation model |
 | `JUDGE_MODEL` | `gpt-54-2026-03-05` | LLM judge used in evaluation |
 | `TOP_K` | `8` | Chunks retrieved per question |
@@ -70,7 +70,7 @@ uv run rag eval    # evaluate on the held-out test split
 
 ## Approach and key decisions
 
-_TBD._
+See [docs/DECISIONS.md](docs/DECISIONS.md) for the decision log and timeline.
 
 ## Results
 

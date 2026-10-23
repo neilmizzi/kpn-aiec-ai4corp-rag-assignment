@@ -10,8 +10,7 @@ import pytest
 pytestmark = pytest.mark.skipif(os.getenv("RUN_LIVE_TESTS") != "1", reason="live test")
 
 
-def test_chat_and_embed():
-    from rag.llm import chat, embed
+def test_chat():
+    from rag.llm import chat
 
     assert chat([{"role": "user", "content": "Reply with just: pong"}]).strip().lower() == "pong"
-    assert len(embed(["hello"])[0]) > 0

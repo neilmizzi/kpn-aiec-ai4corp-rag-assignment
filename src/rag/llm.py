@@ -1,4 +1,4 @@
-"""OpenAI-compatible client for chat and embeddings.
+"""OpenAI-compatible chat client.
 
 Two providers are supported:
 
@@ -16,7 +16,7 @@ from functools import lru_cache
 
 from openai import OpenAI
 
-from rag.config import EMBEDDING_MODEL, LLM_MODEL, LLM_PROVIDER
+from rag.config import LLM_MODEL, LLM_PROVIDER
 
 GATEWAY_ENDPOINT = "https://api.acc.genai.kpn.org/openai/v1"
 GATEWAY_SCOPE = "api://api.acc.genai.kpn.org/.default"
@@ -83,16 +83,3 @@ def chat(messages: list[dict], model: str | None = None) -> str:
     """
     response = get_client().chat.completions.create(model=model or LLM_MODEL, messages=messages)
     return response.choices[0].message.content
-
-
-def embed(texts: list[str]) -> list[list[float]]:
-    """Embed a batch of texts with ``EMBEDDING_MODEL``.
-
-    Args:
-        texts: Texts to embed.
-
-    Returns:
-        One embedding vector per input text, in input order.
-    """
-    response = get_client().embeddings.create(model=EMBEDDING_MODEL, input=texts)
-    return [item.embedding for item in response.data]

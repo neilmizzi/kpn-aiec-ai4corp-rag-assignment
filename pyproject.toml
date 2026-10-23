@@ -5,11 +5,12 @@ description = "RAG assistant answering LangChain questions over the FreshStack O
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "bm25s>=0.3.15",
     "datasets>=2.20",
     "numpy>=1.26",
     "openai>=1.107",
     "python-dotenv>=1.0",
-    "rank-bm25>=0.2.2",
+    "sentence-transformers>=6.2.0",
     "truststore>=0.10.5",
 ]
 
