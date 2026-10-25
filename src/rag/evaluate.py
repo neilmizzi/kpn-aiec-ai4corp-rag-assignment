@@ -3,6 +3,7 @@
 import json
 import math
 import time
+from datetime import datetime
 from pathlib import Path
 
 from rag.data import load_queries, split_queries
@@ -35,7 +36,7 @@ def retrieval_metrics(ranked_ids: list[str], relevant_ids: set[str], k: int) -> 
     }
 
 
-def main(split: str = "dev") -> None:
+def main(split: str = "dev", language_aware: bool = False) -> None:
     """Compare retrieval modes and save per-query measurements for reproduction.
 
     Model/index startup is excluded from timing by warming up before measuring. Binary relevance
@@ -43,21 +44,32 @@ def main(split: str = "dev") -> None:
 
     Args:
         split: ``dev`` for tuning, or ``test`` for the final held-out evaluation.
+        language_aware: Compare baseline hybrid and experimental language-aware hybrid on dev.
 
     Raises:
-        ValueError: If the split is unknown.
+        ValueError: If the split is unknown or the experiment requests held-out data.
     """
     if split not in {"dev", "test"}:
         raise ValueError(f"Unknown evaluation split: {split!r}")
+    if language_aware and split != "dev":
+        raise ValueError("Language-aware retrieval is a dev-only experiment.")
     dev, test = split_queries(load_queries())
     queries = dev if split == "dev" else test
     print(f"Retrieval evaluation: {split}, {len(queries)} queries. Loading index...", flush=True)
     retrieve("warm up", 1)
     output = Path("results") / f"retrieval-{split}.jsonl"
+    if language_aware:
+        output = (
+            Path("results")
+            / "raw"
+            / datetime.now().strftime("retrieval-language-aware-%Y%m%d-%H%M%S.jsonl")
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     print("mode       recall@8  hit@8  ndcg@8  recall@20  seconds/query", flush=True)
     with output.open("w", encoding="utf-8") as stream:
-        for mode in ("bm25", "dense", "hybrid"):
+        for mode in (
+            ("hybrid", "hybrid-language") if language_aware else ("bm25", "dense", "hybrid")
+        ):
             measurements = []
             for query in queries:
                 start = time.perf_counter()
