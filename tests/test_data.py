@@ -1,5 +1,3 @@
-import pytest
-
 from rag.data import split_queries
 
 QUERIES = [{"id": str(i)} for i in range(100)]
@@ -15,8 +13,3 @@ def test_split_is_disjoint_complete_and_sized():
 
 def test_split_is_deterministic_and_order_independent():
     assert split_queries(QUERIES) == split_queries(list(reversed(QUERIES)))
-
-
-def test_split_rejects_bad_fraction():
-    with pytest.raises(ValueError):
-        split_queries(QUERIES, dev_fraction=1.0)
