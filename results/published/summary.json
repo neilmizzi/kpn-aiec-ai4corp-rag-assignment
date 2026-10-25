@@ -1,0 +1,54 @@
+{
+  "assessment": "Baseline originally held out; current rerun uses exposed test questions.",
+  "caveats": [
+    "Model-judge estimates, not human-verified correctness.",
+    "Support percentages use different extracted claim sets.",
+    "Ungraded requests excluded from quality averages; policy exclusions may bias results.",
+    "Single stochastic runs; no significance or billing-cost claim.",
+    "Full answers, source excerpts, prompts and raw provider responses are not included."
+  ],
+  "runs": {
+    "baseline": {
+      "artifact": "answer-test-full-context-20261024-114350",
+      "settings": {
+        "answer_model": "gpt-54-mini-2026-03-17",
+        "judge_model": "gpt-54-2026-03-05",
+        "embedding_model": "BAAI/bge-small-en-v1.5",
+        "top_k": 8,
+        "retrieval": "hybrid",
+        "max_chunk_chars": null
+      },
+      "attempted_questions": 142,
+      "successful_answers": 142,
+      "graded_questions": 141,
+      "mean_nugget_coverage": 0.3387369132049983,
+      "supported_citation_pairs": 1232,
+      "citation_pairs": 1692,
+      "citation_support": 0.7281323877068558,
+      "uncited_items": 129,
+      "judge_refusals": 8,
+      "mean_retrieval_generation_seconds_including_failures": 5.709909157746641
+    },
+    "current": {
+      "artifact": "answer-test-structured-final-post-test-20261025-100315",
+      "settings": {
+        "answer_model": "gpt-54-mini-2026-03-17",
+        "judge_model": "gpt-54-2026-03-05",
+        "embedding_model": "BAAI/bge-small-en-v1.5",
+        "top_k": 8,
+        "retrieval": "hybrid",
+        "max_chunk_chars": null
+      },
+      "attempted_questions": 142,
+      "successful_answers": 141,
+      "graded_questions": 141,
+      "mean_nugget_coverage": 0.1638129010469436,
+      "supported_citation_pairs": 938,
+      "citation_pairs": 1018,
+      "citation_support": 0.9214145383104125,
+      "uncited_items": 4,
+      "judge_refusals": 9,
+      "mean_retrieval_generation_seconds_including_failures": 2.214819747185405
+    }
+  }
+}
