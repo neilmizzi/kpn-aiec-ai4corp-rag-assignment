@@ -13,8 +13,9 @@ tokenization, retrieval or tooling limitations; the experiments do not isolate t
 
 ## 1. Run it
 
-Requires [uv](https://docs.astral.sh/uv/), Python 3.11+, Azure CLI and approved KPN gateway
-access. Verified on Windows/Python 3.14.6.
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.11+.
+The default KPN provider also requires Azure CLI and approved gateway access.
+Verified on Windows/Python 3.14.6.
 
 ```powershell
 uv sync --locked
@@ -35,7 +36,9 @@ Interrupted embedding shards resume. **Exit:** submit an empty question.
 | `EMBEDDING_MODEL` | Local `BAAI/bge-small-en-v1.5` |
 | `TOP_K` / `DATA_DIR` | `8` / `data` |
 
-Public OpenAI requires available model names. Changing embeddings requires a fresh index.
+**OpenAI alternative:** set `LLM_PROVIDER=openai`, `OPENAI_API_KEY`, and available
+`LLM_MODEL` / `JUDGE_MODEL` names in `.env`; skip Azure CLI installation and `az login`.
+Changing embeddings requires a fresh index.
 
 ## 2. How it works
 
@@ -96,7 +99,7 @@ Both use the same mini generator, hybrid retrieval and eight full chunks.
 | Judge-supported citation pairs | 1,232/1,692 (72.8%) | 938/1,018 (92.1%) |
 | Answers covering no expected facts | 61 | 94 |
 
-**Takeaway:** better-supported statements, less complete answers—not an overall improvement.
+**Takeaway:** higher judged citation-support rate, less complete answers—not an overall improvement.
 Both runs used the same retrieved evidence and graded question IDs.
 
 **Retrieval:** at least one judged-relevant top-eight chunk for 64.8% of questions.
@@ -113,9 +116,9 @@ cited sources support what they say.
 | `77644218` (Pinecone) | Cited the recommendation to pass an Embeddings object instead of a callable | Useful supported content, but only 1/2 expected facts; not a fully successful answer |
 | `76288582` (streaming) | Listed LlamaIndex streaming facts without the requested FastAPI solution | Poor task resolution; 0/3 expected facts |
 
-**Your development-answer reviews** (earlier saved answers, not the final test run):
+**Manual development-answer reviews** (earlier saved answers, not the final test run):
 
-| Case | Your assessment |
+| Case | Reviewer assessment |
 |------|-----------------|
 | `76244938` (StructuredTool) | Useful structured-chat direction, but universal agent compatibility and toolkit typing unresolved |
 | `76451997` (token limit) | Useful `max_tokens_limit` guidance; clearer application preferred, not a confirmed factual failure |
@@ -135,7 +138,7 @@ These qualitative reviews assess usefulness, not new scores.
 | State insufficient evidence instead of guessing | Partial: abstention/warnings implemented, sufficiency decisions unreliable |
 | Explain choices and separate dev/test questions | Documented; original held-out and later post-test results distinguished |
 | Report results, examples and trade-offs | Above; detailed evidence linked below, monetary cost unmeasured |
-| Reproducible repository | Clean-copy/wheel checks passed; remote-clone and published-evidence checks remain |
+| Reproducible repository | Clean-copy/wheel checks passed; user confirmed the public-repository clone runs; compact evaluation records included |
 
 ## 5. Limitations and future work
 
@@ -168,14 +171,13 @@ uv run rag eval --answers
 clean-copy/wheel installs with shared caches, before the test review removed/merged checks.
 They protect deterministic rules, not answer quality. Hooks require Python 3.12.
 
-**Evaluation:** uses model calls; add `--split test` for all 142 exposed test questions.
+**Evaluation:** retrieval evaluation runs locally. `--answers` makes generation and judge
+calls; add `--split test` for all 142 exposed test questions.
 
 **Evaluation records:** [summary](results/published/summary.json),
 [per-question scores](results/published/per_question.jsonl) and
 [failures](results/published/failures.jsonl), about 71 KB total.
 Full answers, source excerpts and raw responses remain local/ignored.
-
-**Remaining:** remote-clone verification.
 
 [Full findings and limitations](docs/FINDINGS.md) |
 [Experiments](docs/EXPERIMENTS.md) |
