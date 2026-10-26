@@ -267,4 +267,5 @@ not a fresh held-out result or proof of overall improvement.
 Evidence: `answer-test-structured-final-post-test-20261025-100315`
 (settings, source hashes, attempts, exact evidence, grades, summary and runner).
 Compact scores and failure records are included under `results\published`;
-full raw evidence remains local/ignored. Remote-clone verification remains delivery work.
+full raw evidence remains local/ignored. On 2026-10-26, the user confirmed that the
+public-repository clone runs, including indexing and interactive answers.

@@ -158,5 +158,6 @@ The restricted environment template was not accessed or copied. Package caches a
 Python interpreters were reused. No full corpus/model download, full index rebuild, live
 gateway request, alternate Python version or other operating system was tested in this check.
 
-The configuration is retained and findings documented. Remote-clone/published-repository
-verification and approval of final repository contents/evidence delivery remain.
+On 2026-10-26, the user confirmed that the public-repository clone runs, including
+indexing and interactive answers. Compact evaluation records are included under
+`results\published`; full raw artifacts remain local/ignored.
