@@ -298,6 +298,7 @@ outputs/
 # ===========================================================================
 # Project-specific
 # ===========================================================================
+docs/AI_Engineer_Take_Home_Assignment_02102026.pdf
 # Raw per-question evaluation outputs; commit only summarised results/report
 results/*.jsonl
 results/raw/
